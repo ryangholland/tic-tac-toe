@@ -3,7 +3,7 @@ const Player = (name, marker) => {
 };
 
 const Cell = (space) => {
-  let marker = "X";
+  let marker = "";
 
   return { space, marker };
 };
@@ -16,9 +16,7 @@ const gameBoard = () => {
     board.push(newCell);
   }
 
-  const getBoard = () => board;
-
-  return { getBoard };
+  return board;
 };
 
 const gameController = () => {
@@ -26,9 +24,15 @@ const gameController = () => {
   let playerOne = Player("Player One", "X");
   let playerTwo = Player("Player Two", "O");
 
-  const getBoard = () => board.getBoard();
+  const getBoard = () => board;
 
-  return { getBoard };
+  const getActivePlayer = () => playerOne;
+
+  const setMarker = (space, marker) => {
+    board[space].marker = marker;
+  };
+
+  return { getBoard, getActivePlayer, setMarker };
 };
 
 const displayController = () => {
@@ -36,6 +40,8 @@ const displayController = () => {
 
   let game = gameController();
   let board = game.getBoard();
+
+  console.log(board);
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -48,6 +54,14 @@ const displayController = () => {
     board.forEach((cell) => {
       let cellDiv = document.createElement("div");
       cellDiv.textContent = cell.marker;
+      cellDiv.dataset.space = cell.space;
+
+      cellDiv.addEventListener("click", (e) => {
+        let space = e.target.dataset.space;
+        game.setMarker(space, "X");
+        renderBoard();
+      });
+
       boardContainer.append(cellDiv);
     });
   };
