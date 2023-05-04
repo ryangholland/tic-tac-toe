@@ -1,27 +1,38 @@
-const gameBoard = (() => {
-  let board = [];
-  const hello = () => console.log("Hello. I'm the gameBoard.");
-
-  return { hello };
-})();
-
 const Player = (name, marker) => {
   return { name, marker };
 };
 
-const flowController = (() => {
-  const hello = () => console.log("Hello. I'm the flowController.");
+const Cell = (space) => {
+  let marker = "X";
 
-  return { hello };
-})();
+  return { space, marker };
+};
 
-const displayController = (() => {
-  const hello = () => console.log("Hello. I'm the displayController.");
+const gameBoard = () => {
+  // Generate a new board with 9 unmarked cells
+  let board = [];
+  for (let i = 0; i < 9; i++) {
+    let newCell = Cell(i);
+    board.push(newCell);
+  }
 
-  return { hello };
-})();
+  const getBoard = () => board;
+
+  return { getBoard };
+};
+
+const gameController = () => {
+  let board = gameBoard();
+  let playerOne = player("Player One", "X");
+  let playerTwo = player("Player Two", "O");
 
 
-gameBoard.hello();
-flowController.hello();
-displayController.hello();
+  return {};
+};
+
+const displayController = () => {
+  let game = gameController();
+
+
+  return {};
+};
