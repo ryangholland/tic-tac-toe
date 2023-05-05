@@ -23,13 +23,26 @@ const gameController = () => {
   let board = gameBoard();
   let playerOne = Player("Player One", "X");
   let playerTwo = Player("Player Two", "O");
+  let activePlayer = playerOne;
 
   const getBoard = () => board;
 
-  const getActivePlayer = () => playerOne;
+  const getActivePlayer = () => activePlayer;
 
-  const setMarker = (space, marker) => {
-    board[space].marker = marker;
+  const changeActivePlayer = () => {
+    activePlayer =
+      activePlayer === playerOne
+        ? (activePlayer = playerTwo)
+        : (activePlayer = playerOne);
+  };
+
+  const setMarker = (space) => {
+    if (!board[space].marker) {
+      board[space].marker = activePlayer.marker;
+      changeActivePlayer();
+      console.log("Marker placed.");
+      console.log({ activePlayer });
+    }
   };
 
   return { getBoard, getActivePlayer, setMarker };
@@ -58,7 +71,7 @@ const displayController = () => {
 
       cellDiv.addEventListener("click", (e) => {
         let space = e.target.dataset.space;
-        game.setMarker(space, "X");
+        game.setMarker(space);
         renderBoard();
       });
 
