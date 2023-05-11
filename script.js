@@ -8,7 +8,7 @@ const Cell = (space) => {
   return { space, marker };
 };
 
-const gameBoard = () => {
+const gameBoard = (() => {
   // Generate a new board with 9 unmarked cells
   let board = [];
   for (let i = 0; i < 9; i++) {
@@ -17,10 +17,9 @@ const gameBoard = () => {
   }
 
   return board;
-};
+})();
 
-const gameController = () => {
-  let board = gameBoard();
+const gameController = (() => {
   let playerOne = Player(1, "Player One", "X");
   let playerTwo = Player(2, "Player Two", "O");
   let activePlayer = playerOne;
@@ -37,8 +36,8 @@ const gameController = () => {
   };
 
   const setMarker = (space) => {
-    if (!board[space].marker) {
-      board[space].marker = activePlayer.marker;
+    if (!gameBoard[space].marker) {
+      gameBoard[space].marker = activePlayer.marker;
       checkForWinner();
       changeActivePlayer();
     }
@@ -62,9 +61,9 @@ const gameController = () => {
       let third = combo[2];
 
       if (
-        board[first].marker &&
-        board[first].marker === board[second].marker &&
-        board[second].marker === board[third].marker
+        gameBoard[first].marker &&
+        gameBoard[first].marker === gameBoard[second].marker &&
+        gameBoard[second].marker === gameBoard[third].marker
       ) {
         console.log("winna winna chicken dinna");
       }
@@ -72,14 +71,11 @@ const gameController = () => {
   };
 
   return { getBoard, getActivePlayer, setMarker };
-};
+})();
 
-const displayController = () => {
+const displayController = (() => {
   const boardContainer = document.getElementById("board-container");
   const scoreContainer = document.getElementById("scoreboard");
-
-  let game = gameController();
-  let board = game.getBoard();
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -100,7 +96,7 @@ const displayController = () => {
     let scoreBoardTwo = document.createElement("div");
     let nameAndMarkerTwo = document.createElement("div");
     let scoreTwo = document.createElement("div");
-    let activePlayer = game.getActivePlayer();
+    let activePlayer = gameController.getActivePlayer();
 
     nameAndMarkerOne.textContent = "X | PLAYER ONE";
     scoreOne.textContent = "0";
@@ -131,14 +127,14 @@ const displayController = () => {
   const renderBoard = () => {
     clearBoard();
     clearScores();
-    board.forEach((cell) => {
+    gameBoard.forEach((cell) => {
       let cellDiv = document.createElement("div");
       cellDiv.textContent = cell.marker;
       cellDiv.dataset.space = cell.space;
 
       cellDiv.addEventListener("click", (e) => {
         let space = e.target.dataset.space;
-        game.setMarker(space);
+        gameController.setMarker(space);
         renderBoard();
       });
 
@@ -150,6 +146,4 @@ const displayController = () => {
   renderBoard();
 
   return {};
-};
-
-displayController();
+})();
