@@ -74,8 +74,7 @@ const gameController = (() => {
 })();
 
 const displayController = (() => {
-  const boardContainer = document.getElementById("board-container");
-  const scoreContainer = document.getElementById("scoreboard");
+  const boardContainer = document.getElementById("main-container");
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -83,50 +82,8 @@ const displayController = (() => {
     }
   };
 
-  const clearScores = () => {
-    while (scoreContainer.firstChild) {
-      scoreContainer.removeChild(scoreContainer.firstChild);
-    }
-  };
-
-  const renderScores = () => {
-    let scoreBoardOne = document.createElement("div");
-    let nameAndMarkerOne = document.createElement("div");
-    let scoreOne = document.createElement("div");
-    let scoreBoardTwo = document.createElement("div");
-    let nameAndMarkerTwo = document.createElement("div");
-    let scoreTwo = document.createElement("div");
-    let activePlayer = gameController.getActivePlayer();
-
-    nameAndMarkerOne.textContent = "X | PLAYER ONE";
-    scoreOne.textContent = "0";
-    nameAndMarkerTwo.textContent = "PLAYER TWO | O";
-    scoreTwo.textContent = "0";
-
-    scoreBoardOne.classList.add("scoreboard-one");
-    scoreOne.classList.add("scoreboard-one-score");
-    scoreBoardTwo.classList.add("scoreboard-two");
-    scoreTwo.classList.add("scoreboard-two-score");
-
-    if (activePlayer.num === 1) {
-      scoreBoardTwo.classList.remove("active-player-border");
-      scoreBoardOne.classList.add("active-player-border");
-    } else {
-      scoreBoardTwo.classList.add("active-player-border");
-      scoreBoardOne.classList.remove("active-player-border");
-    }
-
-    scoreBoardOne.append(nameAndMarkerOne);
-    scoreBoardOne.append(scoreOne);
-    scoreBoardTwo.append(nameAndMarkerTwo);
-    scoreBoardTwo.append(scoreTwo);
-    scoreContainer.append(scoreBoardOne);
-    scoreContainer.append(scoreBoardTwo);
-  };
-
   const renderBoard = () => {
     clearBoard();
-    clearScores();
     gameBoard.forEach((cell) => {
       let cellDiv = document.createElement("div");
       cellDiv.textContent = cell.marker;
@@ -140,7 +97,6 @@ const displayController = (() => {
 
       boardContainer.append(cellDiv);
     });
-    renderScores();
   };
 
   renderBoard();
