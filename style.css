@@ -63,19 +63,40 @@ h6 {
 }
 
 #main-container {
-  display: grid;
-  grid-template: 200px 200px 200px / 200px 200px 200px;
-  justify-items: center;
-  align-items: center;
-
   border: solid 1px black;
   border-radius: 10px;
   padding: 15px;
   gap: 5px;
   background-color: black;
+  min-height: 630px;
+  min-width: 630px;
 }
 
-#main-container div {
+.title-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 7.5rem;
+  padding: 20px;
+}
+
+.title-screen div:nth-child(1) {
+  align-self: flex-start;
+}
+
+.title-screen div:nth-child(3) {
+  align-self: flex-end;
+}
+
+.game-board {
+  display: grid;
+  grid-template: 200px 200px 200px / 200px 200px 200px;
+  justify-items: center;
+  align-items: center;
+}
+
+.game-board div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,4 +175,8 @@ h6 {
 .active-player-border {
   border: solid 2px green;
   border-radius: 5px;
+}
+
+.hidden {
+  display: none;
 }

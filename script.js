@@ -24,8 +24,6 @@ const gameController = (() => {
   let playerTwo = Player(2, "Player Two", "O");
   let activePlayer = playerOne;
 
-  const getBoard = () => board;
-
   const getActivePlayer = () => activePlayer;
 
   const changeActivePlayer = () => {
@@ -70,11 +68,11 @@ const gameController = (() => {
     });
   };
 
-  return { getBoard, getActivePlayer, setMarker };
+  return { getActivePlayer, setMarker };
 })();
 
 const displayController = (() => {
-  const boardContainer = document.getElementById("main-container");
+  const boardContainer = document.querySelector("game-board");
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -99,7 +97,7 @@ const displayController = (() => {
     });
   };
 
-  renderBoard();
+  // renderBoard();
 
   return {};
 })();
