@@ -72,7 +72,11 @@ const gameController = (() => {
 })();
 
 const displayController = (() => {
-  const boardContainer = document.querySelector("game-board");
+  const boardContainer = document.querySelector(".game-board");
+  const scoreBoardContainer = document.querySelector(".scoreboard");
+  const startButton = document.querySelector(".start-game-button");
+  const titleScreen = document.querySelector(".title-screen");
+  const newGameContainer = document.querySelector(".new-game-container");
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -97,7 +101,13 @@ const displayController = (() => {
     });
   };
 
-  // renderBoard();
+  startButton.addEventListener("click", (e) => {
+    titleScreen.classList.add("hidden");
+    newGameContainer.classList.add("hidden");
+    boardContainer.classList.remove("hidden");
+    scoreBoardContainer.classList.remove("hidden");
+    renderBoard();
+  });
 
   return {};
 })();
