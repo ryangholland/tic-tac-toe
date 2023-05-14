@@ -1,5 +1,5 @@
-const Player = (num, name, marker) => {
-  return { num, name, marker };
+const Player = (num, name, marker, score) => {
+  return { num, name, marker, score };
 };
 
 const Cell = (space) => {
@@ -20,11 +20,14 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  let playerOne = Player(1, "Player One", "X");
-  let playerTwo = Player(2, "Player Two", "O");
+  let playerOne = Player(1, "Player One", "X", 0);
+  let playerTwo = Player(2, "Player Two", "O", 0);
   let activePlayer = playerOne;
   let winningPlayer = null;
+  let round = 1;
 
+  const getPlayerOne = () => playerOne;
+  const getPlayerTwo = () => playerTwo;
   const getActivePlayer = () => activePlayer;
 
   const changeActivePlayer = () => {
@@ -65,7 +68,8 @@ const gameController = (() => {
         gameBoard[first].marker === gameBoard[second].marker &&
         gameBoard[second].marker === gameBoard[third].marker
       ) {
-        console.log("winna winna chicken dinna");
+        activePlayer.score++;
+        winningPlayer = activePlayer;
         displayController.showEndRoundModal(activePlayer.name);
       }
     });
@@ -76,12 +80,28 @@ const gameController = (() => {
       gameBoard.filter((cell) => !cell.marker).length === 0 &&
       !winningPlayer
     ) {
-      console.log("tie");
       displayController.showEndRoundModal();
     }
   };
 
-  return { getActivePlayer, setMarker };
+  const initNewRound = () => {
+    round++;
+    winningPlayer = null;
+    activePlayer = round % 2 == 0 ? playerTwo : playerOne;
+    playerOne.marker = playerOne.marker === "X" ? "O" : "X";
+    playerTwo.marker = playerTwo.marker === "X" ? "O" : "X";
+    gameBoard.forEach((cell) => {
+      cell.marker = "";
+    });
+  };
+
+  return {
+    getPlayerOne,
+    getPlayerTwo,
+    getActivePlayer,
+    setMarker,
+    initNewRound,
+  };
 })();
 
 const menuController = (() => {
@@ -98,12 +118,26 @@ const menuController = (() => {
 
 const displayController = (() => {
   const boardContainer = document.querySelector(".game-board");
-  const scoreBoardContainer = document.querySelector(".scoreboard");
-  const startButton = document.querySelector(".start-game-button");
+
   const titleScreen = document.querySelector(".title-screen");
+
   const newGameContainer = document.querySelector(".new-game-container");
+  const startButton = document.querySelector(".start-game-button");
+
+  const scoreBoardContainer = document.querySelector(".scoreboard");
+  const scoreBoardOne = document.querySelector(".scoreboard-one");
+  const playerOneMarker = document.querySelector(".player-one-marker");
+  const playerOneName = document.querySelector(".player-one-name");
+  const playerOneScore = document.querySelector(".player-one-score");
+  const scoreBoardTwo = document.querySelector(".scoreboard-two");
+  const playerTwoMarker = document.querySelector(".player-two-marker");
+  const playerTwoName = document.querySelector(".player-two-name");
+  const playerTwoScore = document.querySelector(".player-two-score");
+
   const endRoundModal = document.querySelector("dialog");
   const endRoundText = document.querySelector(".end-round-text");
+  const newRoundButton = document.querySelector(".new-round-button");
+  const mainMenuButton = document.querySelector(".main-menu-button");
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -121,6 +155,7 @@ const displayController = (() => {
       cellDiv.addEventListener("click", (e) => {
         let space = e.target.dataset.space;
         gameController.setMarker(space);
+        renderActivePlayer();
         renderBoard();
       });
 
@@ -128,7 +163,30 @@ const displayController = (() => {
     });
   };
 
+  const renderScoreBoard = () => {
+    let playerOne = gameController.getPlayerOne();
+    let playerTwo = gameController.getPlayerTwo();
+    playerOneMarker.textContent = playerOne.marker;
+    playerTwoMarker.textContent = playerTwo.marker;
+    playerOneName.textContent = playerOne.name;
+    playerTwoName.textContent = playerTwo.name;
+    playerOneScore.textContent = playerOne.score;
+    playerTwoScore.textContent = playerTwo.score;
+  };
+
+  const renderActivePlayer = () => {
+    let activePlayer = gameController.getActivePlayer();
+    if (activePlayer.num === 1) {
+      scoreBoardOne.classList.add("active-player-border");
+      scoreBoardTwo.classList.remove("active-player-border");
+    } else {
+      scoreBoardOne.classList.remove("active-player-border");
+      scoreBoardTwo.classList.add("active-player-border");
+    }
+  };
+
   const showEndRoundModal = (winner) => {
+    renderScoreBoard();
     if (winner) {
       endRoundText.textContent = `${winner} wins the round!`;
     } else {
@@ -138,12 +196,23 @@ const displayController = (() => {
     endRoundModal.showModal();
   };
 
+  const hideEndRoundModal = () => {
+    endRoundModal.close();
+  };
+
   startButton.addEventListener("click", (e) => {
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
     menuController.showScreen(boardContainer);
     menuController.showScreen(scoreBoardContainer);
     renderBoard();
+  });
+
+  newRoundButton.addEventListener("click", (e) => {
+    gameController.initNewRound();
+    renderBoard();
+    renderScoreBoard();
+    hideEndRoundModal();
   });
 
   return { showEndRoundModal };
