@@ -30,6 +30,11 @@ const gameController = (() => {
   const getPlayerTwo = () => playerTwo;
   const getActivePlayer = () => activePlayer;
 
+  const setPlayerNames = (name1, name2) => {
+    playerOne.name = name1;
+    playerTwo.name = name2;
+  };
+
   const changeActivePlayer = () => {
     activePlayer =
       activePlayer === playerOne
@@ -112,6 +117,7 @@ const gameController = (() => {
     getPlayerOne,
     getPlayerTwo,
     getActivePlayer,
+    setPlayerNames,
     setMarker,
     initNewRound,
     resetGame,
@@ -140,7 +146,7 @@ const displayController = (() => {
 
   const nameScreen = document.querySelector(".name-screen");
   const playerOneNameInput = document.querySelector(".player-one-name-input");
-  const playerTwoNameInput = document.querySelector(".player-one-name-input");
+  const playerTwoNameInput = document.querySelector(".player-two-name-input");
 
   const startGameContainer = document.querySelector(".start-game-container");
   const startButton = document.querySelector(".start-game-button");
@@ -222,6 +228,8 @@ const displayController = (() => {
   };
 
   vsPlayerButton.addEventListener("click", (e) => {
+    playerOneNameInput.value = "";
+    playerTwoNameInput.value = "";
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
     menuController.showScreen(nameScreen);
@@ -233,7 +241,12 @@ const displayController = (() => {
     menuController.hideScreen(startGameContainer);
     menuController.showScreen(boardContainer);
     menuController.showScreen(scoreBoardContainer);
+    gameController.setPlayerNames(
+      playerOneNameInput.value === "" ? "Player One" : playerOneNameInput.value,
+      playerTwoNameInput.value === "" ? "Player Two" : playerTwoNameInput.value
+    );
     renderBoard();
+    renderScoreBoard();
   });
 
   newRoundButton.addEventListener("click", (e) => {
