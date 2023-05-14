@@ -51,6 +51,10 @@ h6 {
 
 /* CSS Reset Above; Custom Code Below */
 
+body {
+  position: relative;
+}
+
 .wrapper {
   height: 100%;
   display: flex;
@@ -185,7 +189,8 @@ h6 {
   align-items: center;
 }
 
-.new-game-buttons button {
+.new-game-buttons button,
+button {
   border-radius: 5px;
   margin: 20px;
   height: 50px;
@@ -202,4 +207,20 @@ button:hover {
 
 .hidden {
   display: none;
+}
+
+dialog {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+dialog h1 {
+  margin-bottom: 10px;
 }
