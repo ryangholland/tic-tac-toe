@@ -230,7 +230,8 @@ dialog h1 {
   margin-bottom: 10px;
 }
 
-.name-screen-container {
+.name-screen-container,
+.computer-screen-container {
   height: 600px;
   display: flex;
   flex-direction: column;
@@ -246,4 +247,9 @@ input {
   margin-top: 10px;
   width: 70%;
   padding-inline: 30px;
+}
+
+.difficulty-buttons {
+  display: flex;
+  flex-direction: column;
 }

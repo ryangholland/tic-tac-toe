@@ -143,10 +143,17 @@ const displayController = (() => {
 
   const newGameContainer = document.querySelector(".new-game-container");
   const vsPlayerButton = document.querySelector(".vs-player-button");
+  const vsComputerButton = document.querySelector(".vs-computer-button");
 
   const nameScreen = document.querySelector(".name-screen");
   const playerOneNameInput = document.querySelector(".player-one-name-input");
   const playerTwoNameInput = document.querySelector(".player-two-name-input");
+
+  const computerScreen = document.querySelector(".computer-screen");
+  const playerNameInput = document.querySelector(".player-name-input");
+  const easyButton = document.querySelector(".easy-diff");
+  const medButton = document.querySelector(".med-diff");
+  const hardButton = document.querySelector(".hard-diff");
 
   const startGameContainer = document.querySelector(".start-game-container");
   const startButton = document.querySelector(".start-game-button");
@@ -236,9 +243,18 @@ const displayController = (() => {
     menuController.showScreen(startGameContainer);
   });
 
+  vsComputerButton.addEventListener("click", (e) => {
+    playerNameInput.value = "";
+    menuController.hideScreen(titleScreen);
+    menuController.hideScreen(newGameContainer);
+    menuController.showScreen(computerScreen);
+    menuController.showScreen(startGameContainer);
+  })
+
   startButton.addEventListener("click", (e) => {
     menuController.hideScreen(nameScreen);
     menuController.hideScreen(startGameContainer);
+    menuController.hideScreen(computerScreen);
     menuController.showScreen(boardContainer);
     menuController.showScreen(scoreBoardContainer);
     gameController.setPlayerNames(
