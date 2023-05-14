@@ -95,12 +95,26 @@ const gameController = (() => {
     });
   };
 
+  const resetGame = () => {
+    round = 1;
+    winningPlayer = null;
+    activePlayer = playerOne;
+    gameBoard.forEach((cell) => {
+      cell.marker = "";
+    });
+    playerOne.score = 0;
+    playerTwo.score = 0;
+    playerOne.marker = "X";
+    playerTwo.marker = "O";
+  };
+
   return {
     getPlayerOne,
     getPlayerTwo,
     getActivePlayer,
     setMarker,
     initNewRound,
+    resetGame,
   };
 })();
 
@@ -212,6 +226,17 @@ const displayController = (() => {
     gameController.initNewRound();
     renderBoard();
     renderScoreBoard();
+    hideEndRoundModal();
+  });
+
+  mainMenuButton.addEventListener("click", (e) => {
+    gameController.resetGame();
+    renderScoreBoard();
+    renderActivePlayer();
+    menuController.hideScreen(boardContainer);
+    menuController.hideScreen(scoreBoardContainer);
+    menuController.showScreen(titleScreen);
+    menuController.showScreen(newGameContainer);
     hideEndRoundModal();
   });
 
