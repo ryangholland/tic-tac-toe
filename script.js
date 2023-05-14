@@ -136,6 +136,13 @@ const displayController = (() => {
   const titleScreen = document.querySelector(".title-screen");
 
   const newGameContainer = document.querySelector(".new-game-container");
+  const vsPlayerButton = document.querySelector(".vs-player-button");
+
+  const nameScreen = document.querySelector(".name-screen");
+  const playerOneNameInput = document.querySelector(".player-one-name-input");
+  const playerTwoNameInput = document.querySelector(".player-one-name-input");
+
+  const startGameContainer = document.querySelector(".start-game-container");
   const startButton = document.querySelector(".start-game-button");
 
   const scoreBoardContainer = document.querySelector(".scoreboard");
@@ -214,9 +221,16 @@ const displayController = (() => {
     endRoundModal.close();
   };
 
-  startButton.addEventListener("click", (e) => {
+  vsPlayerButton.addEventListener("click", (e) => {
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
+    menuController.showScreen(nameScreen);
+    menuController.showScreen(startGameContainer);
+  });
+
+  startButton.addEventListener("click", (e) => {
+    menuController.hideScreen(nameScreen);
+    menuController.hideScreen(startGameContainer);
     menuController.showScreen(boardContainer);
     menuController.showScreen(scoreBoardContainer);
     renderBoard();

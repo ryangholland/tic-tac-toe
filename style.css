@@ -182,11 +182,13 @@ body {
   border-radius: 5px;
 }
 
-.new-game-container {
+.new-game-container,
+.start-game-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .new-game-buttons button,
@@ -226,4 +228,22 @@ dialog {
 
 dialog h1 {
   margin-bottom: 10px;
+}
+
+.name-screen-container {
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.5rem;
+  padding: 20px;
+}
+
+input {
+  margin-bottom: 75px;
+  margin-top: 10px;
+  width: 70%;
+  padding-inline: 30px;
 }

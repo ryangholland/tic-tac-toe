@@ -18,21 +18,45 @@
     </dialog>
     <div class="wrapper">
       <div id="main-container">
-        <div class="title-screen">
+        <div class="title-screen ">
           <div>TIC</div>
           <div>TAC</div>
           <div>TOE</div>
         </div>
 
+        <div class="name-screen hidden">
+          <div class="name-screen-container">
+            <div>Player One Name:</div>
+            <input
+              type="text"
+              maxlength="10"
+              class="player-one-name-input"
+
+            />
+            <div>Player Two Name:</div>
+            <input
+              type="text"
+              maxlength="10"
+              class="player-two-name-input"
+
+            />
+          </div>
+        </div>
+
         <div class="game-board hidden"></div>
       </div>
+
       <div id="sub-container">
-        <div class="new-game-container">
+        <div class="new-game-container ">
           <h1>New Game</h1>
           <div class="new-game-buttons">
-            <button class="start-game-button">Vs. Player</button>
+            <button class="vs-player-button">Vs. Player</button>
             <button>Vs. Computer</button>
           </div>
+        </div>
+
+        <div class="start-game-container hidden">
+          <button class="start-game-button">Start Game</button>
         </div>
 
         <div class="scoreboard hidden">
