@@ -23,6 +23,7 @@ const gameController = (() => {
   let playerOne = Player(1, "Player One", "X");
   let playerTwo = Player(2, "Player Two", "O");
   let activePlayer = playerOne;
+  let winningPlayer = null;
 
   const getActivePlayer = () => activePlayer;
 
@@ -37,6 +38,7 @@ const gameController = (() => {
     if (!gameBoard[space].marker) {
       gameBoard[space].marker = activePlayer.marker;
       checkForWinner();
+      checkForTie();
       changeActivePlayer();
     }
   };
@@ -64,8 +66,19 @@ const gameController = (() => {
         gameBoard[second].marker === gameBoard[third].marker
       ) {
         console.log("winna winna chicken dinna");
+        displayController.showEndRoundModal(activePlayer.name);
       }
     });
+  };
+
+  const checkForTie = () => {
+    if (
+      gameBoard.filter((cell) => !cell.marker).length === 0 &&
+      !winningPlayer
+    ) {
+      console.log("tie");
+      displayController.showEndRoundModal();
+    }
   };
 
   return { getActivePlayer, setMarker };
@@ -89,6 +102,8 @@ const displayController = (() => {
   const startButton = document.querySelector(".start-game-button");
   const titleScreen = document.querySelector(".title-screen");
   const newGameContainer = document.querySelector(".new-game-container");
+  const endRoundModal = document.querySelector("dialog");
+  const endRoundText = document.querySelector(".end-round-text");
 
   const clearBoard = () => {
     while (boardContainer.firstChild) {
@@ -113,6 +128,16 @@ const displayController = (() => {
     });
   };
 
+  const showEndRoundModal = (winner) => {
+    if (winner) {
+      endRoundText.textContent = `${winner} wins the round!`;
+    } else {
+      endRoundText.textContent = `The round was a tie!`;
+    }
+
+    endRoundModal.showModal();
+  };
+
   startButton.addEventListener("click", (e) => {
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
@@ -121,5 +146,5 @@ const displayController = (() => {
     renderBoard();
   });
 
-  return {};
+  return { showEndRoundModal };
 })();
