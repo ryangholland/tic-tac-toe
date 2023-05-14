@@ -71,6 +71,18 @@ const gameController = (() => {
   return { getActivePlayer, setMarker };
 })();
 
+const menuController = (() => {
+  const hideScreen = (screen) => {
+    screen.classList.add("hidden");
+  };
+
+  const showScreen = (screen) => {
+    screen.classList.remove("hidden");
+  };
+
+  return { hideScreen, showScreen };
+})();
+
 const displayController = (() => {
   const boardContainer = document.querySelector(".game-board");
   const scoreBoardContainer = document.querySelector(".scoreboard");
@@ -102,10 +114,10 @@ const displayController = (() => {
   };
 
   startButton.addEventListener("click", (e) => {
-    titleScreen.classList.add("hidden");
-    newGameContainer.classList.add("hidden");
-    boardContainer.classList.remove("hidden");
-    scoreBoardContainer.classList.remove("hidden");
+    menuController.hideScreen(titleScreen);
+    menuController.hideScreen(newGameContainer);
+    menuController.showScreen(boardContainer);
+    menuController.showScreen(scoreBoardContainer);
     renderBoard();
   });
 
