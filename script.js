@@ -26,7 +26,7 @@ const gameController = (() => {
   let winningPlayer = null;
   let round = 1;
   let aiActive = false;
-  let aiDifficulty = "easy";
+  let aiDifficulty = "Easy";
 
   const getPlayerOne = () => playerOne;
   const getPlayerTwo = () => playerTwo;
@@ -34,7 +34,11 @@ const gameController = (() => {
 
   const setPlayerNames = (name1, name2) => {
     playerOne.name = name1;
-    playerTwo.name = name2;
+    if (aiActive) {
+      playerTwo.name = `AI (${aiDifficulty})`;
+    } else {
+      playerTwo.name = name2;
+    }
   };
 
   const initAI = () => {
@@ -47,7 +51,6 @@ const gameController = (() => {
 
   const setDifficulty = (difficulty) => {
     aiDifficulty = difficulty;
-    console.log(aiDifficulty);
   };
 
   const changeActivePlayer = () => {
@@ -63,7 +66,24 @@ const gameController = (() => {
       checkForWinner();
       checkForTie();
       changeActivePlayer();
+      stepAI();
     }
+  };
+
+  const stepAI = () => {
+    if (aiActive && activePlayer === playerTwo && winningPlayer === null) {
+      while (activePlayer === playerTwo) {
+        let aiCell = getRandomCell();
+        setMarker(aiCell);
+      }
+      console.log("AI's Turn");
+    }
+  };
+
+  const getRandomCell = () => {
+    min = Math.ceil(0);
+    max = Math.floor(9);
+    return Math.floor(Math.random() * (max - min) + min);
   };
 
   const checkForWinner = () => {
@@ -113,6 +133,8 @@ const gameController = (() => {
     gameBoard.forEach((cell) => {
       cell.marker = "";
     });
+
+    stepAI();
   };
 
   const resetGame = () => {
@@ -308,7 +330,7 @@ const displayController = (() => {
     button.addEventListener("click", (e) => {
       diffButtons.forEach((button) => button.classList.remove("diff-select"));
       button.classList.add("diff-select");
-      gameController.setDifficulty(button.textContent.toLowerCase());
+      gameController.setDifficulty(button.textContent);
     });
   });
 
