@@ -73,17 +73,11 @@ const gameController = (() => {
   const stepAI = () => {
     if (aiActive && activePlayer === playerTwo && winningPlayer === null) {
       while (activePlayer === playerTwo) {
-        let aiCell = getRandomCell();
+        let aiCell = aiController.getAiSquare(aiDifficulty);
         setMarker(aiCell);
       }
       console.log("AI's Turn");
     }
-  };
-
-  const getRandomCell = () => {
-    min = Math.ceil(0);
-    max = Math.floor(9);
-    return Math.floor(Math.random() * (max - min) + min);
   };
 
   const checkForWinner = () => {
@@ -162,6 +156,27 @@ const gameController = (() => {
     initNewRound,
     resetGame,
   };
+})();
+
+const aiController = (() => {
+
+  const getAiSquare = (difficulty) => {
+    if (difficulty = "Easy") {
+      return getEasySquare();
+    }
+  }
+
+  const getEasySquare = () => {
+    return getRandomCell();
+  }
+
+  const getRandomCell = () => {
+    min = Math.ceil(0);
+    max = Math.floor(9);
+    return Math.floor(Math.random() * (max - min) + min);
+  };
+
+  return { getAiSquare }
 })();
 
 const menuController = (() => {
@@ -278,6 +293,7 @@ const displayController = (() => {
   vsPlayerButton.addEventListener("click", (e) => {
     playerOneNameInput.value = "";
     playerTwoNameInput.value = "";
+    playerNameInput.value = "";
     gameController.noAI();
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
@@ -286,6 +302,8 @@ const displayController = (() => {
   });
 
   vsComputerButton.addEventListener("click", (e) => {
+    playerOneNameInput.value = "";
+    playerTwoNameInput.value = "";
     playerNameInput.value = "";
     gameController.initAI();
     menuController.hideScreen(titleScreen);
@@ -300,8 +318,14 @@ const displayController = (() => {
     menuController.hideScreen(computerScreen);
     menuController.showScreen(boardContainer);
     menuController.showScreen(scoreBoardContainer);
+    let playerOneName = playerNameInput.value;
+    if (!playerOneName)
+      playerOneName =
+        playerOneNameInput.value === ""
+          ? "Player One"
+          : playerOneNameInput.value;
     gameController.setPlayerNames(
-      playerOneNameInput.value === "" ? "Player One" : playerOneNameInput.value,
+      playerOneName,
       playerTwoNameInput.value === "" ? "Player Two" : playerTwoNameInput.value
     );
     renderBoard();
