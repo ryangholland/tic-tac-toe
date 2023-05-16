@@ -25,6 +25,8 @@ const gameController = (() => {
   let activePlayer = playerOne;
   let winningPlayer = null;
   let round = 1;
+  let aiActive = false;
+  let aiDifficulty = "easy";
 
   const getPlayerOne = () => playerOne;
   const getPlayerTwo = () => playerTwo;
@@ -33,6 +35,19 @@ const gameController = (() => {
   const setPlayerNames = (name1, name2) => {
     playerOne.name = name1;
     playerTwo.name = name2;
+  };
+
+  const initAI = () => {
+    aiActive = true;
+  };
+
+  const noAI = () => {
+    aiActive = false;
+  };
+
+  const setDifficulty = (difficulty) => {
+    aiDifficulty = difficulty;
+    console.log(aiDifficulty);
   };
 
   const changeActivePlayer = () => {
@@ -117,6 +132,9 @@ const gameController = (() => {
     getPlayerOne,
     getPlayerTwo,
     getActivePlayer,
+    initAI,
+    noAI,
+    setDifficulty,
     setPlayerNames,
     setMarker,
     initNewRound,
@@ -154,6 +172,7 @@ const displayController = (() => {
   const easyButton = document.querySelector(".easy-diff");
   const medButton = document.querySelector(".med-diff");
   const hardButton = document.querySelector(".hard-diff");
+  const diffButtons = [easyButton, medButton, hardButton];
 
   const startGameContainer = document.querySelector(".start-game-container");
   const startButton = document.querySelector(".start-game-button");
@@ -237,6 +256,7 @@ const displayController = (() => {
   vsPlayerButton.addEventListener("click", (e) => {
     playerOneNameInput.value = "";
     playerTwoNameInput.value = "";
+    gameController.noAI();
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
     menuController.showScreen(nameScreen);
@@ -245,11 +265,12 @@ const displayController = (() => {
 
   vsComputerButton.addEventListener("click", (e) => {
     playerNameInput.value = "";
+    gameController.initAI();
     menuController.hideScreen(titleScreen);
     menuController.hideScreen(newGameContainer);
     menuController.showScreen(computerScreen);
     menuController.showScreen(startGameContainer);
-  })
+  });
 
   startButton.addEventListener("click", (e) => {
     menuController.hideScreen(nameScreen);
@@ -281,6 +302,14 @@ const displayController = (() => {
     menuController.showScreen(titleScreen);
     menuController.showScreen(newGameContainer);
     hideEndRoundModal();
+  });
+
+  diffButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      diffButtons.forEach((button) => button.classList.remove("diff-select"));
+      button.classList.add("diff-select");
+      gameController.setDifficulty(button.textContent.toLowerCase());
+    });
   });
 
   return { showEndRoundModal };

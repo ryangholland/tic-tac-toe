@@ -253,3 +253,10 @@ input {
   display: flex;
   flex-direction: column;
 }
+
+.diff-select {
+  font-weight: bolder;
+  font-size: 1.35rem;
+  border: solid 2px green;
+  background-color: lightgreen;
+}
