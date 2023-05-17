@@ -73,7 +73,12 @@ const gameController = (() => {
   const stepAI = () => {
     if (aiActive && activePlayer === playerTwo && winningPlayer === null) {
       while (activePlayer === playerTwo) {
-        let aiCell = aiController.getAiSquare(aiDifficulty);
+        let aiCell = aiController.getAiSquare(
+          aiDifficulty,
+          gameBoard,
+          playerOne,
+          playerTwo
+        );
         setMarker(aiCell);
       }
       console.log("AI's Turn");
@@ -159,16 +164,13 @@ const gameController = (() => {
 })();
 
 const aiController = (() => {
-
-  const getAiSquare = (difficulty) => {
-    if (difficulty = "Easy") {
+  const getAiSquare = (difficulty, board, playerOne, playerTwo) => {
+    if (difficulty === "Easy") {
       return getEasySquare();
+    } else if (difficulty === "Hard") {
+      return getHardSquare(board, playerOne, playerTwo);
     }
-  }
-
-  const getEasySquare = () => {
-    return getRandomCell();
-  }
+  };
 
   const getRandomCell = () => {
     min = Math.ceil(0);
@@ -176,7 +178,101 @@ const aiController = (() => {
     return Math.floor(Math.random() * (max - min) + min);
   };
 
-  return { getAiSquare }
+  const getEasySquare = () => {
+    return getRandomCell();
+  };
+
+  const getHardSquare = (board, playerOne, playerTwo) => {
+    console.log({playerOne, playerTwo})
+    let humanMarker = playerOne.marker;
+    let aiMarker = playerTwo.marker;
+    let simpleBoard = board.map((cell) => cell.marker);
+
+    for (let i = 0; i < simpleBoard.length; i++) {
+      if (simpleBoard[i] === "") simpleBoard[i] = i;
+    }
+
+    const emptyCells = (board) => {
+      return board.filter((cell) => cell != "X" && cell != "O");
+    };
+
+    const winning = (board, marker) => {
+      if (
+        (board[0] == marker && board[1] == marker && board[2] == marker) ||
+        (board[3] == marker && board[4] == marker && board[5] == marker) ||
+        (board[6] == marker && board[7] == marker && board[8] == marker) ||
+        (board[0] == marker && board[3] == marker && board[6] == marker) ||
+        (board[1] == marker && board[4] == marker && board[7] == marker) ||
+        (board[2] == marker && board[5] == marker && board[8] == marker) ||
+        (board[0] == marker && board[4] == marker && board[8] == marker) ||
+        (board[2] == marker && board[4] == marker && board[6] == marker)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    const minimax = (newBoard, marker) => {
+      let availCells = emptyCells(newBoard);
+
+      if (winning(newBoard, humanMarker)) {
+        return { score: -10 };
+      } else if (winning(newBoard, aiMarker)) {
+        return { score: 10 };
+      } else if (availCells.length === 0) {
+        return { score: 0 };
+      }
+
+      let moves = [];
+
+      for (let i = 0; i < availCells.length; i++) {
+        let move = {};
+        move.index = newBoard[availCells[i]];
+
+        newBoard[availCells[i]] = marker;
+
+        if (marker == aiMarker) {
+          let result = minimax(newBoard, humanMarker);
+          move.score = result.score;
+        } else {
+          let result = minimax(newBoard, aiMarker);
+          move.score = result.score;
+        }
+
+        newBoard[availCells[i]] = move.index;
+
+        moves.push(move);
+      }
+
+      let bestMove;
+      if (marker === aiMarker) {
+        let bestScore = -10000;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      } else {
+        let bestScore = 10000;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      }
+
+      return moves[bestMove];
+    };
+
+    let returnValue = minimax(simpleBoard,aiMarker);
+    console.log(returnValue.index);
+    return returnValue.index;
+  };
+
+  return { getAiSquare };
 })();
 
 const menuController = (() => {
