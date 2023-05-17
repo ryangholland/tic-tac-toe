@@ -24,9 +24,11 @@ const gameController = (() => {
   let playerTwo = Player(2, "Player Two", "O", 0);
   let activePlayer = playerOne;
   let winningPlayer = null;
+  let gameTied = false;
   let round = 1;
   let aiActive = false;
   let aiDifficulty = "Easy";
+  let aiTurns = 0;
 
   const getPlayerOne = () => playerOne;
   const getPlayerTwo = () => playerTwo;
@@ -71,17 +73,23 @@ const gameController = (() => {
   };
 
   const stepAI = () => {
-    if (aiActive && activePlayer === playerTwo && winningPlayer === null) {
+    if (
+      aiActive &&
+      activePlayer === playerTwo &&
+      winningPlayer === null &&
+      gameTied === false
+    ) {
       while (activePlayer === playerTwo) {
         let aiCell = aiController.getAiSquare(
           aiDifficulty,
           gameBoard,
           playerOne,
-          playerTwo
+          playerTwo,
+          aiTurns
         );
         setMarker(aiCell);
       }
-      console.log("AI's Turn");
+      aiTurns++;
     }
   };
 
@@ -119,6 +127,7 @@ const gameController = (() => {
       gameBoard.filter((cell) => !cell.marker).length === 0 &&
       !winningPlayer
     ) {
+      gameTied = true;
       displayController.showEndRoundModal();
     }
   };
@@ -132,7 +141,8 @@ const gameController = (() => {
     gameBoard.forEach((cell) => {
       cell.marker = "";
     });
-
+    aiTurns = 0;
+    gameTied = false;
     stepAI();
   };
 
@@ -147,6 +157,8 @@ const gameController = (() => {
     playerTwo.score = 0;
     playerOne.marker = "X";
     playerTwo.marker = "O";
+    aiTurns = 0;
+    gameTied = false;
   };
 
   return {
@@ -164,10 +176,13 @@ const gameController = (() => {
 })();
 
 const aiController = (() => {
-  const getAiSquare = (difficulty, board, playerOne, playerTwo) => {
+  const getAiSquare = (difficulty, board, playerOne, playerTwo, aiTurns) => {
     if (difficulty === "Easy") {
       return getEasySquare();
     } else if (difficulty === "Hard") {
+      return getHardSquare(board, playerOne, playerTwo);
+    } else if (difficulty === "Medium") {
+      if (aiTurns > 2) return getEasySquare();
       return getHardSquare(board, playerOne, playerTwo);
     }
   };
@@ -183,7 +198,6 @@ const aiController = (() => {
   };
 
   const getHardSquare = (board, playerOne, playerTwo) => {
-    console.log({playerOne, playerTwo})
     let humanMarker = playerOne.marker;
     let aiMarker = playerTwo.marker;
     let simpleBoard = board.map((cell) => cell.marker);
@@ -267,8 +281,7 @@ const aiController = (() => {
       return moves[bestMove];
     };
 
-    let returnValue = minimax(simpleBoard,aiMarker);
-    console.log(returnValue.index);
+    let returnValue = minimax(simpleBoard, aiMarker);
     return returnValue.index;
   };
 
@@ -372,6 +385,7 @@ const displayController = (() => {
   };
 
   const showEndRoundModal = (winner) => {
+    renderBoard();
     renderScoreBoard();
     if (winner) {
       endRoundText.textContent = `${winner} wins the round!`;
